@@ -8,7 +8,10 @@ GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
 ## Set Headers
 Set headers by use "httprouter.SetHeader("Access-Control-Allow-Origin", "*")"
 
-## Url Path only accept 0-9, a-z, A-Z
+## Url Path Rules
+Only accept 0-9, a-z, A-Z  
+Should start with "/"  
+Should not end with "/"
 
 ## How to use
 <pre><code>package main
