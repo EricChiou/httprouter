@@ -26,26 +26,26 @@ import (
 
 func main() {
 	httprouter.Get("/", handler)
-	httprouter.Get("/demo", handler)
-	httprouter.Get("/demo/id/demo2", handler)
-	httprouter.Get("/demo/demo/demo/demo", handler)
+	httprouter.Get("/path", handler)
+	httprouter.Get("/path/id/path2", handler)
+	httprouter.Get("/path/path/path2/path", handler)
 
 	// path parameter
-	httprouter.Get("/demo/:id/demo", handlerParam)
-	httprouter.Get("/:id/demo", handlerParam)
-	httprouter.Get("/demo/demo/demo2/:id", handlerParam)
+	httprouter.Get("/path/:id/path", handlerParam)
+	httprouter.Get("/:id/path", handlerParam)
+	httprouter.Get("/path/path/path2/:id", handlerParam)
 
 	// duplicate path
-	// httprouter.Get("/demo/demo", handler)
+	// httprouter.Get("/path/path", handler)
 
 	// invalid character, only accept 0-9, a-z, A-Z
-	// httprouter.Get("/demo/&", handler)
-	// httprouter.Get("/demo/:!", handler)
+	// httprouter.Get("/path/&", handler)
+	// httprouter.Get("/path/:!", handler)
 
 	// wrong format
-	// httprouter.Get("demo/demo", handler) // should start with "/"
-	// httprouter.Get("/demo/demo/", handler) // should not end with "/"
-	// httprouter.Get("/demo//demo", handler)
+	// httprouter.Get("path/path", handler) // should start with "/"
+	// httprouter.Get("/path/path/", handler) // should not end with "/"
+	// httprouter.Get("/path//path", handler)
 
 	// set headers
 	httprouter.SetHeader("Access-Control-Allow-Origin", "*")
