@@ -59,4 +59,13 @@ func main() {
 			fmt.Println("start server error: ", err)
 		}
 	}()
+}
+
+func demo(context *httprouter.Context) {
+	fmt.Fprintf(context.Ctx, "url path: %s", string(context.Ctx.Path()))
+}
+
+func demoParam(context *httprouter.Context) {
+	id, _ := context.GetPathParam("id")
+	fmt.Fprintf(context.Ctx, "url path: %s\nid: %s", string(context.Ctx.Path()), id)
 }</code></pre>
