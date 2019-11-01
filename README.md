@@ -28,7 +28,7 @@ func main() {
 	httprouter.Get("/", handler)
 	httprouter.Get("/path", handler)
 	httprouter.Get("/path/id/path2", handler)
-	httprouter.Get("/path/path/path2/path", handler)
+	httprouter.Get("/path/path/path2", handler)
 
 	// path parameter
 	httprouter.Get("/path/:id/path", handlerParam)
