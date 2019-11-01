@@ -37,8 +37,8 @@ func main() {
 	// httprouter.Get("/demo/:!", demo)
 
 	// wrong format
-	// httprouter.Get("demo/demo", demo) // url path should start with "/"
-	// httprouter.Get("/demo/demo/", demo) // url path should not end with "/"
+	// httprouter.Get("demo/demo", demo) // should start with "/"
+	// httprouter.Get("/demo/demo/", demo) // should not end with "/"
 	// httprouter.Get("/demo//demo", demo)
 
 	// set headers
