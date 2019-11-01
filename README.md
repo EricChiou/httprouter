@@ -6,7 +6,8 @@ https://github.com/valyala/fasthttp
 GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
 
 ## Set Headers
-Set headers by use "httprouter.SetHeader("Access-Control-Allow-Origin", "*")"
+Set headers by using
+<pre><code>httprouter.SetHeader("Access-Control-Allow-Origin", "*")</code></pre>
 
 ## Url Path Rules
 Only accept 0-9, a-z, A-Z  
