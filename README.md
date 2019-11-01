@@ -1,4 +1,5 @@
 # httprouter
+<pre><code>import "github.com/EricChiou/httprouter"</code></pre>
 ## Use fasthttp as http server
 https://github.com/valyala/fasthttp
 
