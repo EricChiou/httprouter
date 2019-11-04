@@ -57,17 +57,19 @@ func SetHeader(key string, value string) {
 	headers = append(headers, header{key: key, value: value})
 }
 
-// Init net/http server
-func Init() {
-	http.HandleFunc("/", func(rep http.ResponseWriter, req *http.Request) {
+// HTTPHandler net/http http handler
+func HTTPHandler() *http.ServeMux {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", func(rep http.ResponseWriter, req *http.Request) {
 		for _, header := range headers {
 			rep.Header().Set(header.key, header.value)
 		}
 		methodHandler(rep, req)
 	})
+	return mux
 }
 
-// FasthttpHandler fasthttp handler
+// FasthttpHandler fasthttp http handler
 func FasthttpHandler() func(ctx *fasthttp.RequestCtx) {
 	return func(ctx *fasthttp.RequestCtx) {
 		for _, header := range headers {
