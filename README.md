@@ -1,6 +1,6 @@
 # httprouter
 ```go
-import "github.com/EricChiou/httprouter"</code></pre>
+import "github.com/EricChiou/httprouter"
 ```
 ## Use fasthttp as http server
 https://github.com/valyala/fasthttp
@@ -15,9 +15,9 @@ httprouter.SetHeader("Access-Control-Allow-Origin", "*")
 ```
 
 ## Url Path Rules
-Only accept 0-9, a-z, A-Z  
-Should start with "/"  
-Should not end with "/"
+- Only accept 0-9, a-z, A-Z  
+- Should start with "/"  
+- Should not end with "/"
 
 ## How to use
 ```go
