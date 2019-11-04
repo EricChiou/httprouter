@@ -2,32 +2,66 @@ package httprouter
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/valyala/fasthttp"
 )
 
-func methodHandler(ctx *fasthttp.RequestCtx) {
+func methodHandler(rep http.ResponseWriter, req *http.Request) {
+	switch req.Method {
+	case http.MethodGet:
+		pathHandler(rep, req, trees.Get)
+	case http.MethodPost:
+		pathHandler(rep, req, trees.Post)
+	case http.MethodPut:
+		pathHandler(rep, req, trees.Put)
+	case http.MethodDelete:
+		pathHandler(rep, req, trees.Delete)
+	case http.MethodPatch:
+		pathHandler(rep, req, trees.Patch)
+	case http.MethodHead:
+		pathHandler(rep, req, trees.Head)
+	case http.MethodOptions:
+		pathHandler(rep, req, trees.Options)
+	default:
+		fmt.Fprintf(rep, "404 page not found")
+	}
+}
+
+func fasthttpMethodHandler(ctx *fasthttp.RequestCtx) {
 	switch string(ctx.Method()) {
-	case fasthttp.MethodGet:
-		pathHandler(ctx, trees.Get)
-	case fasthttp.MethodPost:
-		pathHandler(ctx, trees.Post)
-	case fasthttp.MethodPut:
-		pathHandler(ctx, trees.Put)
-	case fasthttp.MethodDelete:
-		pathHandler(ctx, trees.Delete)
-	case fasthttp.MethodPatch:
-		pathHandler(ctx, trees.Patch)
-	case fasthttp.MethodHead:
-		pathHandler(ctx, trees.Head)
-	case fasthttp.MethodOptions:
-		pathHandler(ctx, trees.Options)
+	case http.MethodGet:
+		fasthttpPathHandler(ctx, trees.Get)
+	case http.MethodPost:
+		fasthttpPathHandler(ctx, trees.Post)
+	case http.MethodPut:
+		fasthttpPathHandler(ctx, trees.Put)
+	case http.MethodDelete:
+		fasthttpPathHandler(ctx, trees.Delete)
+	case http.MethodPatch:
+		fasthttpPathHandler(ctx, trees.Patch)
+	case http.MethodHead:
+		fasthttpPathHandler(ctx, trees.Head)
+	case http.MethodOptions:
+		fasthttpPathHandler(ctx, trees.Options)
 	default:
 		fmt.Fprintf(ctx, "404 page not found")
 	}
 }
 
-func pathHandler(ctx *fasthttp.RequestCtx, tree *node) {
+func pathHandler(rep http.ResponseWriter, req *http.Request, tree *node) {
+	params := Params{}
+	path := req.URL.Path
+
+	if run := mapping(tree, "", path[1:], &params); run != nil {
+		(*run)(&Context{Rep: rep, Req: req, Params: params})
+		return
+	}
+
+	fmt.Fprintf(rep, "404 page not found")
+}
+
+func fasthttpPathHandler(ctx *fasthttp.RequestCtx, tree *node) {
 	params := Params{}
 	path := string(ctx.RequestURI())
 

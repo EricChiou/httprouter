@@ -1,11 +1,15 @@
 package httprouter
 
 import (
+	"net/http"
+
 	"github.com/valyala/fasthttp"
 )
 
 // Context is use to pass variables between middleware
 type Context struct {
+	Rep    http.ResponseWriter
+	Req    *http.Request
 	Ctx    *fasthttp.RequestCtx
 	Params Params
 }
