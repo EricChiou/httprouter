@@ -1,5 +1,7 @@
 # httprouter
-<pre><code>import "github.com/EricChiou/httprouter"</code></pre>
+```go
+import "github.com/EricChiou/httprouter"</code></pre>
+```
 ## Use fasthttp as http server
 https://github.com/valyala/fasthttp
 
@@ -8,7 +10,9 @@ GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
 
 ## Set Headers
 Set headers by using
-<pre><code>httprouter.SetHeader("Access-Control-Allow-Origin", "*")</code></pre>
+```go
+httprouter.SetHeader("Access-Control-Allow-Origin", "*")
+```
 
 ## Url Path Rules
 Only accept 0-9, a-z, A-Z  
@@ -16,7 +20,8 @@ Should start with "/"
 Should not end with "/"
 
 ## How to use
-<pre><code>package main
+```go
+package main
 
 import (
 	"fmt"
@@ -76,4 +81,5 @@ func handler(context *httprouter.Context) {
 func handlerParam(context *httprouter.Context) {
 	id, _ := context.GetPathParam("id")
 	fmt.Fprintf(context.Ctx, "url path: %s\nid: %s", string(context.Ctx.Path()), id)
-}</code></pre>
+}
+```
