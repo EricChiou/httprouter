@@ -63,6 +63,7 @@ func Init() {
 		for _, header := range headers {
 			rep.Header().Set(header.key, header.value)
 		}
+		methodHandler(rep, req)
 	})
 }
 
