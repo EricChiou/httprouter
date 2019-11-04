@@ -120,11 +120,6 @@ func main() {
 	httprouter.SetHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS")
 	httprouter.SetHeader("Access-Control-Allow-Headers", "Content-Type")
 
-	// start http server
-	if err := httprouter.ListenAndServe(":6200"); err != nil {
-		panic(err)
-	}
-
 	// fasthttp http server
 	if err := fasthttp.ListenAndServe(":6200", httprouter.FasthttpHandler()); err != nil {
 		panic(err)
