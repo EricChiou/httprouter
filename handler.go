@@ -51,7 +51,7 @@ func fasthttpMethodHandler(ctx *fasthttp.RequestCtx) {
 
 func pathHandler(rep http.ResponseWriter, req *http.Request, tree *node) {
 	params := Params{}
-	path := req.URL.Path
+	path := req.RequestURI
 
 	if run := mapping(tree, "", path[1:], &params); run != nil {
 		(*run)(&Context{Rep: rep, Req: req, Params: params})
