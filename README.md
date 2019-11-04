@@ -2,8 +2,9 @@
 ```go
 import "github.com/EricChiou/httprouter"
 ```
-## Use fasthttp as http server
-https://github.com/valyala/fasthttp
+## Support both net/http and fasthttp
+net/http - https://golang.org/pkg/net/http/  
+fasthttp - https://github.com/valyala/fasthttp
 
 ## Support methods
 GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
@@ -20,16 +21,26 @@ httprouter.SetHeader("Access-Control-Allow-Origin", "*")
 - Should not end with "/"
 
 ## How to use
+### net/http
 ```go
 package main
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/EricChiou/httprouter"
 )
 
 func main() {
+	hadler := func(context *httprouter.Context) {
+		fmt.Fprintf(context.Rep, "url path: %s", context.Req.RequestURI)
+	}
+	handlerParam := func(context *httprouter.Context) {
+		id, _ := context.GetPathParam("id")
+		fmt.Fprintf(context.Rep, "url path: %s\nid: %s", context.Req.RequestURI, id)
+	}
+	
 	httprouter.Get("/", handler)
 	httprouter.Get("/path", handler)
 	httprouter.Get("/path/id/path2", handler)
@@ -57,13 +68,13 @@ func main() {
 	httprouter.SetHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS")
 	httprouter.SetHeader("Access-Control-Allow-Headers", "Content-Type")
 
-	// start http server
-	if err := httprouter.ListenAndServe(":6200"); err != nil {
+	// net/http http server
+	if err := http.ListenAndServe(":6200", httprouter.HTTPHandler()); err != nil {
 		panic(err)
 	}
 
-	// start https server
-	// if err := httprouter.ListenAndServeTLS(":6200", "cert file path...", "key file path..."); err != nil {
+	// net/http https server
+	// if err := http.ListenAndServeTLS(":6200", "cert file path...", "key file path...", httprouter.HTTPHandler()); err != nil {
 	// 	panic(err)
 	// }
 
@@ -73,13 +84,61 @@ func main() {
 		}
 	}()
 }
+```
+### fasthttp
+```go
+package main
 
-func handler(context *httprouter.Context) {
-	fmt.Fprintf(context.Ctx, "url path: %s", string(context.Ctx.Path()))
-}
+import (
+	"fmt"
 
-func handlerParam(context *httprouter.Context) {
-	id, _ := context.GetPathParam("id")
-	fmt.Fprintf(context.Ctx, "url path: %s\nid: %s", string(context.Ctx.Path()), id)
+	"github.com/EricChiou/httprouter"
+	"github.com/valyala/fasthttp"
+)
+
+func main() {
+	hadler := func(context *httprouter.Context) {
+		fmt.Fprintf(context.Ctx, "url path: %s", string(context.Ctx.Path()))
+	}
+	handlerParam := func(context *httprouter.Context) {
+		id, _ := context.GetPathParam("id")
+		fmt.Fprintf(context.Ctx, "url path: %s\nid: %s", string(context.Ctx.Path()), id)
+	}
+	
+	httprouter.Get("/", handler)
+	httprouter.Get("/path", handler)
+	httprouter.Get("/path/id/path2", handler)
+	httprouter.Get("/path/path/path2", handler)
+
+	// path parameter
+	httprouter.Get("/path/:id/path", handlerParam)
+	httprouter.Get("/:id/path", handlerParam)
+	httprouter.Get("/path/path/path2/:id", handlerParam)
+
+	// set headers
+	httprouter.SetHeader("Access-Control-Allow-Origin", "*")
+	httprouter.SetHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS")
+	httprouter.SetHeader("Access-Control-Allow-Headers", "Content-Type")
+
+	// start http server
+	if err := httprouter.ListenAndServe(":6200"); err != nil {
+		panic(err)
+	}
+
+	// fasthttp http server
+	if err := fasthttp.ListenAndServe(":6200", httprouter.FasthttpHandler()); err != nil {
+		panic(err)
+	}
+
+	// fasthttp https server
+	// if err := fasthttp.ListenAndServeTLS(":6200", "cert file path...", "key file path...", httprouter.FasthttpHandler()); err != nil {
+	// 	panic(err)
+	// }
+
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("start server error: ", err)
+		}
+	}()
 }
 ```
