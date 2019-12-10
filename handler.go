@@ -3,6 +3,7 @@ package httprouter
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/valyala/fasthttp"
 )
@@ -63,7 +64,7 @@ func pathHandler(rep http.ResponseWriter, req *http.Request, tree *node) {
 
 func fasthttpPathHandler(ctx *fasthttp.RequestCtx, tree *node) {
 	params := Params{}
-	path := string(ctx.RequestURI())
+	path := strings.SplitN(string(ctx.RequestURI()), "?", 2)[0]
 
 	if run := mapping(tree, "", path[1:], &params); run != nil {
 		(*run)(&Context{Ctx: ctx, Params: params})
