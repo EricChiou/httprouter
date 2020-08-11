@@ -37,7 +37,7 @@ func main() {
 		fmt.Fprintf(context.Rep, "url path: %s", context.Req.RequestURI)
 	}
 	handlerParam := func(context *httprouter.Context) {
-		id, _ := context.GetPathParam("id")
+		id, _ := context.PathParam("id")
 		fmt.Fprintf(context.Rep, "url path: %s\nid: %s", context.Req.RequestURI, id)
 	}
 	
@@ -101,7 +101,7 @@ func main() {
 		fmt.Fprintf(context.Ctx, "url path: %s", string(context.Ctx.Path()))
 	}
 	handlerParam := func(context *httprouter.Context) {
-		id, _ := context.GetPathParam("id")
+		id, _ := context.PathParam("id")
 		fmt.Fprintf(context.Ctx, "url path: %s\nid: %s", string(context.Ctx.Path()), id)
 	}
 	
