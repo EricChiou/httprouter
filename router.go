@@ -1,9 +1,8 @@
 package httprouter
 
 import (
+	"log"
 	"net/http"
-
-	"github.com/valyala/fasthttp"
 )
 
 var headers []header
@@ -57,24 +56,17 @@ func SetHeader(key string, value string) {
 	headers = append(headers, header{key: key, value: value})
 }
 
-// HTTPHandler net/http http handler
-func HTTPHandler() *http.ServeMux {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(rep http.ResponseWriter, req *http.Request) {
-		for _, header := range headers {
-			rep.Header().Set(header.key, header.value)
-		}
-		methodHandler(rep, req)
-	})
-	return mux
-}
+func addRoute(method string, tree *node, path string, run func(*Context)) {
+	if !checkFormat(method, path) {
+		return
+	}
 
-// FasthttpHandler fasthttp http handler
-func FasthttpHandler() func(ctx *fasthttp.RequestCtx) {
-	return func(ctx *fasthttp.RequestCtx) {
-		for _, header := range headers {
-			ctx.Response.Header.Set(header.key, header.value)
-		}
-		fasthttpMethodHandler(ctx)
+	if checkDuplicate(tree, "", path[1:]) {
+		log.Fatalln("path duplicated, " + method + ": '" + path)
+		return
+	}
+
+	if !addPath(tree, "", path[1:], run) {
+		log.Fatalln("add path fail, " + method + ": '" + path)
 	}
 }

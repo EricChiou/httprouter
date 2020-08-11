@@ -6,21 +6,6 @@ import (
 	"strings"
 )
 
-func addRoute(method string, tree *node, path string, run func(*Context)) {
-	if !checkFormat(method, path) {
-		return
-	}
-
-	if checkDuplicate(tree, "", path[1:]) {
-		log.Fatalln("path duplicated, " + method + ": '" + path)
-		return
-	}
-
-	if !addPath(tree, "", path[1:], run) {
-		log.Fatalln("add path fail, " + method + ": '" + path)
-	}
-}
-
 func checkFormat(method, path string) bool {
 	// check path is valid
 	if len(path) == 0 {
@@ -115,4 +100,28 @@ func filterPath(path string) (string, string) {
 		}
 	}
 	return path, ""
+}
+
+func mapping(tree *node, path, pathSeg string, params *Params) *func(*Context) {
+	if tree.wildChild {
+		*params = append(Params{{Key: tree.path, Value: path}}, *params...)
+	}
+
+	if len(pathSeg) == 0 {
+		if tree.run != nil {
+			return tree.run
+		}
+		return nil
+	}
+
+	path, pathSeg = filterPath(pathSeg)
+	for _, child := range tree.children {
+		if path == child.path || child.wildChild {
+			if run := mapping(child, path, pathSeg, params); run != nil {
+				return run
+			}
+		}
+	}
+
+	return nil
 }
