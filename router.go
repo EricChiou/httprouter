@@ -1,6 +1,7 @@
 package httprouter
 
 import (
+	"errors"
 	"log"
 	"net/http"
 )
@@ -17,38 +18,38 @@ var trees = Trees{
 }
 
 // Get is use to build new get api
-func Get(path string, run func(*Context)) {
-	addRoute(http.MethodGet, trees.Get, path, run)
+func Get(path string, run func(*Context)) error {
+	return addRoute(http.MethodGet, trees.Get, path, run)
 }
 
 // Post is use to build new get api
-func Post(path string, run func(*Context)) {
-	addRoute(http.MethodPost, trees.Post, path, run)
+func Post(path string, run func(*Context)) error {
+	return addRoute(http.MethodPost, trees.Post, path, run)
 }
 
 // Put is use to build new get api
-func Put(path string, run func(*Context)) {
-	addRoute(http.MethodPut, trees.Put, path, run)
+func Put(path string, run func(*Context)) error {
+	return addRoute(http.MethodPut, trees.Put, path, run)
 }
 
 // Delete is use to build new get api
-func Delete(path string, run func(*Context)) {
-	addRoute(http.MethodDelete, trees.Delete, path, run)
+func Delete(path string, run func(*Context)) error {
+	return addRoute(http.MethodDelete, trees.Delete, path, run)
 }
 
 // Patch is use to build new get api
-func Patch(path string, run func(*Context)) {
-	addRoute(http.MethodPatch, trees.Patch, path, run)
+func Patch(path string, run func(*Context)) error {
+	return addRoute(http.MethodPatch, trees.Patch, path, run)
 }
 
 // Head is use to build new get api
-func Head(path string, run func(*Context)) {
-	addRoute(http.MethodHead, trees.Head, path, run)
+func Head(path string, run func(*Context)) error {
+	return addRoute(http.MethodHead, trees.Head, path, run)
 }
 
 // Options is use to build new get api
-func Options(path string, run func(*Context)) {
-	addRoute(http.MethodOptions, trees.Options, path, run)
+func Options(path string, run func(*Context)) error {
+	return addRoute(http.MethodOptions, trees.Options, path, run)
 }
 
 // SetHeader add api response header
@@ -56,17 +57,22 @@ func SetHeader(key string, value string) {
 	headers = append(headers, header{key: key, value: value})
 }
 
-func addRoute(method string, tree *node, path string, run func(*Context)) {
-	if !checkFormat(method, path) {
-		return
+func addRoute(method string, tree *node, path string, run func(*Context)) error {
+	if err := checkFormat(method, path); err != nil {
+		return err
 	}
 
 	if checkDuplicate(tree, "", path[1:]) {
-		log.Fatalln("path duplicated, " + method + ": '" + path)
-		return
+		msg := "path duplicated, " + method + ": '" + path
+		log.Println(msg)
+		return errors.New(msg)
 	}
 
 	if !addPath(tree, "", path[1:], run) {
-		log.Fatalln("add path fail, " + method + ": '" + path)
+		msg := "add path fail, " + method + ": '" + path
+		log.Fatalln(msg)
+		return errors.New(msg)
 	}
+
+	return nil
 }

@@ -1,25 +1,28 @@
 package httprouter
 
 import (
+	"errors"
 	"log"
 	"regexp"
 	"strings"
 )
 
-func checkFormat(method, path string) bool {
+func checkFormat(method, path string) error {
 	// check path is valid
 	if len(path) == 0 {
-		log.Fatalln("path error, path can not be empty.")
-		return false
+		msg := "path error, path can not be empty."
+		log.Println(msg)
+		return errors.New(msg)
 	}
 
 	if path[0:1] != "/" {
-		log.Fatalln("path error, " + method + ": '" + path + "', path must begin with '/'.")
-		return false
+		msg := "path error, " + method + ": '" + path + "', path must begin with '/'."
+		log.Println(msg)
+		return errors.New(msg)
 	}
 
 	if len(path) == 1 {
-		return true
+		return nil
 	}
 
 	paths := strings.Split(path[1:], "/")
@@ -28,16 +31,18 @@ func checkFormat(method, path string) bool {
 			p = p[1:]
 		}
 		if len(p) == 0 {
-			log.Fatalln("path error, " + method + ": '" + path + "', path has wrong format.")
-			return false
+			msg := "path error, " + method + ": '" + path + "', path has wrong format."
+			log.Println(msg)
+			return errors.New(msg)
 		}
 		match, _ := regexp.MatchString("^[0-9a-zA-Z]+$", p)
 		if !match {
-			log.Fatalln("path error, " + method + ": '" + path + "', path has invalid character, only accept 0-9, a-z, A-Z.")
-			return false
+			msg := "path error, " + method + ": '" + path + "', path has invalid character, only accept 0-9, a-z, A-Z."
+			log.Println(msg)
+			return errors.New(msg)
 		}
 	}
-	return true
+	return nil
 }
 
 func checkDuplicate(tree *node, path, pathSeg string) bool {
