@@ -107,9 +107,9 @@ func filterPath(path string) (string, string) {
 	return path, ""
 }
 
-func mapping(tree *node, path, pathSeg string, params *Params) *func(*Context) {
+func mapping(tree *node, path, pathSeg string, params *[]param) *func(*Context) {
 	if tree.wildChild {
-		*params = append(Params{{Key: tree.path, Value: path}}, *params...)
+		*params = append([]param{{Key: tree.path, Value: path}}, *params...)
 	}
 
 	if len(pathSeg) == 0 {

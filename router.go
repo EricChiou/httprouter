@@ -7,49 +7,49 @@ import (
 )
 
 var headers []header
-var trees = Trees{
-	Get:     &node{path: "", wildChild: false, run: nil, children: []*node{}},
-	Post:    &node{path: "", wildChild: false, run: nil, children: []*node{}},
-	Put:     &node{path: "", wildChild: false, run: nil, children: []*node{}},
-	Delete:  &node{path: "", wildChild: false, run: nil, children: []*node{}},
-	Patch:   &node{path: "", wildChild: false, run: nil, children: []*node{}},
-	Head:    &node{path: "", wildChild: false, run: nil, children: []*node{}},
-	Options: &node{path: "", wildChild: false, run: nil, children: []*node{}},
+var trees = nodeTrees{
+	get:     &node{path: "", wildChild: false, run: nil, children: []*node{}},
+	post:    &node{path: "", wildChild: false, run: nil, children: []*node{}},
+	put:     &node{path: "", wildChild: false, run: nil, children: []*node{}},
+	delete:  &node{path: "", wildChild: false, run: nil, children: []*node{}},
+	patch:   &node{path: "", wildChild: false, run: nil, children: []*node{}},
+	head:    &node{path: "", wildChild: false, run: nil, children: []*node{}},
+	options: &node{path: "", wildChild: false, run: nil, children: []*node{}},
 }
 
 // Get is use to build new get api
 func Get(path string, run func(*Context)) error {
-	return addRoute(http.MethodGet, trees.Get, path, run)
+	return addRoute(http.MethodGet, trees.get, path, run)
 }
 
 // Post is use to build new get api
 func Post(path string, run func(*Context)) error {
-	return addRoute(http.MethodPost, trees.Post, path, run)
+	return addRoute(http.MethodPost, trees.post, path, run)
 }
 
 // Put is use to build new get api
 func Put(path string, run func(*Context)) error {
-	return addRoute(http.MethodPut, trees.Put, path, run)
+	return addRoute(http.MethodPut, trees.put, path, run)
 }
 
 // Delete is use to build new get api
 func Delete(path string, run func(*Context)) error {
-	return addRoute(http.MethodDelete, trees.Delete, path, run)
+	return addRoute(http.MethodDelete, trees.delete, path, run)
 }
 
 // Patch is use to build new get api
 func Patch(path string, run func(*Context)) error {
-	return addRoute(http.MethodPatch, trees.Patch, path, run)
+	return addRoute(http.MethodPatch, trees.patch, path, run)
 }
 
 // Head is use to build new get api
 func Head(path string, run func(*Context)) error {
-	return addRoute(http.MethodHead, trees.Head, path, run)
+	return addRoute(http.MethodHead, trees.head, path, run)
 }
 
 // Options is use to build new get api
 func Options(path string, run func(*Context)) error {
-	return addRoute(http.MethodOptions, trees.Options, path, run)
+	return addRoute(http.MethodOptions, trees.options, path, run)
 }
 
 // SetHeader add api response header

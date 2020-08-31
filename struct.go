@@ -11,35 +11,30 @@ type Context struct {
 	Rep    http.ResponseWriter
 	Req    *http.Request
 	Ctx    *fasthttp.RequestCtx
-	Params Params
+	Params []param
 }
 
 // PathParam get path param
-func (context Context) PathParam(key string) (string, bool) {
+func (context Context) PathParam(key string) string {
 	for _, param := range context.Params {
 		if param.Key == key {
-			return param.Value, true
+			return param.Value
 		}
 	}
-	return "", false
+	return ""
 }
 
-// Param Params data struct
-type Param struct {
+type param struct {
 	Key, Value string
-}
-
-// Params Context Params data struct
-type Params []Param
-
-// Trees request node tree
-type Trees struct {
-	Get, Post, Put, Delete, Patch, Copy, Head, Options *node
 }
 
 type header struct {
 	key   string
 	value string
+}
+
+type nodeTrees struct {
+	get, post, put, delete, patch, head, options *node
 }
 
 type node struct {

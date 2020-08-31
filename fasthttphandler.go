@@ -21,26 +21,26 @@ func FasthttpHandler() func(ctx *fasthttp.RequestCtx) {
 func fasthttpMethodHandler(ctx *fasthttp.RequestCtx) {
 	switch string(ctx.Method()) {
 	case http.MethodGet:
-		fasthttpPathHandler(ctx, trees.Get)
+		fasthttpPathHandler(ctx, trees.get)
 	case http.MethodPost:
-		fasthttpPathHandler(ctx, trees.Post)
+		fasthttpPathHandler(ctx, trees.post)
 	case http.MethodPut:
-		fasthttpPathHandler(ctx, trees.Put)
+		fasthttpPathHandler(ctx, trees.put)
 	case http.MethodDelete:
-		fasthttpPathHandler(ctx, trees.Delete)
+		fasthttpPathHandler(ctx, trees.delete)
 	case http.MethodPatch:
-		fasthttpPathHandler(ctx, trees.Patch)
+		fasthttpPathHandler(ctx, trees.patch)
 	case http.MethodHead:
-		fasthttpPathHandler(ctx, trees.Head)
+		fasthttpPathHandler(ctx, trees.head)
 	case http.MethodOptions:
-		fasthttpPathHandler(ctx, trees.Options)
+		fasthttpPathHandler(ctx, trees.options)
 	default:
 		fmt.Fprintf(ctx, "404 page not found")
 	}
 }
 
 func fasthttpPathHandler(ctx *fasthttp.RequestCtx, tree *node) {
-	params := Params{}
+	params := []param{}
 	path := strings.SplitN(string(ctx.RequestURI()), "?", 2)[0]
 
 	if run := mapping(tree, "", path[1:], &params); run != nil {

@@ -20,26 +20,26 @@ func HTTPHandler() *http.ServeMux {
 func methodHandler(rep http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case http.MethodGet:
-		pathHandler(rep, req, trees.Get)
+		pathHandler(rep, req, trees.get)
 	case http.MethodPost:
-		pathHandler(rep, req, trees.Post)
+		pathHandler(rep, req, trees.post)
 	case http.MethodPut:
-		pathHandler(rep, req, trees.Put)
+		pathHandler(rep, req, trees.put)
 	case http.MethodDelete:
-		pathHandler(rep, req, trees.Delete)
+		pathHandler(rep, req, trees.delete)
 	case http.MethodPatch:
-		pathHandler(rep, req, trees.Patch)
+		pathHandler(rep, req, trees.patch)
 	case http.MethodHead:
-		pathHandler(rep, req, trees.Head)
+		pathHandler(rep, req, trees.head)
 	case http.MethodOptions:
-		pathHandler(rep, req, trees.Options)
+		pathHandler(rep, req, trees.options)
 	default:
 		fmt.Fprintf(rep, "404 page not found")
 	}
 }
 
 func pathHandler(rep http.ResponseWriter, req *http.Request, tree *node) {
-	params := Params{}
+	params := []param{}
 	path := req.RequestURI
 
 	if run := mapping(tree, "", path[1:], &params); run != nil {
