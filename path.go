@@ -35,9 +35,9 @@ func checkFormat(method, path string) error {
 			log.Println(msg)
 			return errors.New(msg)
 		}
-		match, _ := regexp.MatchString("^[0-9a-zA-Z]+$", p)
+		match, _ := regexp.MatchString("^[0-9a-zA-Z-_]+$", p)
 		if !match {
-			msg := "path error, " + method + ": '" + path + "', path has invalid character, only accept 0-9, a-z, A-Z."
+			msg := "path error, " + method + ": '" + path + "', path has invalid character, only accept 0-9, a-z, A-Z, -, _."
 			log.Println(msg)
 			return errors.New(msg)
 		}
